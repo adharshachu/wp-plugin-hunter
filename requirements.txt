@@ -1,0 +1,11 @@
+aiohttp
+pydantic
+aiocsv
+aiofiles
+python-dotenv
+gspread
+google-auth
+fastapi
+uvicorn
+python-multipart
+pyinstaller

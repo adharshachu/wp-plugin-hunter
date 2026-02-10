@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+
+# Environment & Secrets
+.env
+*.json
+!package.json
+!tsconfig.json
+
+# Build & Dist
+dist/
+build/
+*.spec
+frontend/dist/
+frontend/node_modules/
+
+# Results & Logs
+results.csv
+results1.csv
+temp_*.txt
+*.log

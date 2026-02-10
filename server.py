@@ -65,7 +65,7 @@ async def run_pipeline_task(job_id: str, domains: List[str], tab_name: str):
     except Exception as e:
         jobs[job_id]["status"] = f"error: {str(e)}"
 
-@app.post("/upload")
+@app.post("/api/upload")
 async def upload_file(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
     job_id = str(uuid.uuid4())
     content = await file.read()
@@ -99,7 +99,7 @@ async def upload_file(background_tasks: BackgroundTasks, file: UploadFile = File
     
     return {"job_id": job_id, "tab_name": tab_name}
 
-@app.get("/status/{job_id}")
+@app.get("/api/status/{job_id}")
 async def get_status(job_id: str):
     if job_id not in jobs:
         return {"error": "Job not found"}

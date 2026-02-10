@@ -128,4 +128,12 @@ if os.path.exists("frontend/dist"):
 
 if __name__ == "__main__":
     import uvicorn
+    import webbrowser
+    from threading import Timer
+
+    def open_browser():
+        webbrowser.open("http://localhost:8000/")
+
+    # Open browser after 1.5 seconds to give server time to start
+    Timer(1.5, open_browser).start()
     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -117,14 +117,27 @@ async def get_status(job_id: str):
         "tab_name": job.get("tab_name")
     }
 
+from pathlib import Path
+
+# Paths for static files
+BASE_DIR = Path(__file__).parent.resolve()
+FRONTEND_DIST = BASE_DIR / "frontend" / "dist"
+
 # Serve Static Files (Built Frontend)
-if os.path.exists("frontend/dist"):
-    app.mount("/", StaticFiles(directory="frontend/dist", html=True), name="static")
+if FRONTEND_DIST.exists():
+    app.mount("/", StaticFiles(directory=str(FRONTEND_DIST), html=True), name="static")
 
     @app.get("/{full_path:path}")
     async def serve_frontend(full_path: str):
         # Fallback to index.html for SPA routing
-        return FileResponse("frontend/dist/index.html")
+        index_path = FRONTEND_DIST / "index.html"
+        if index_path.exists():
+            return FileResponse(str(index_path))
+        return {"error": "Frontend build files missing. Please run the build script."}
+else:
+    @app.get("/")
+    async def root():
+        return {"message": "WP Plugin Hunter API is running. Frontend build missing at 'frontend/dist'."}
 
 if __name__ == "__main__":
     import uvicorn

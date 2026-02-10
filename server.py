@@ -2,6 +2,7 @@ import asyncio
 import os
 import uuid
 import time
+import glob
 from typing import Dict, List
 from fastapi import FastAPI, UploadFile, File, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,6 +14,16 @@ from utils import GoogleSheetHandler, load_domains
 from dotenv import load_dotenv
 
 load_dotenv()
+
+def cleanup_temp_files():
+    """Cleanup any leftover temp files from previous runs."""
+    for f in glob.glob("temp_*.txt"):
+        try:
+            os.remove(f)
+        except:
+            pass
+
+cleanup_temp_files()
 
 app = FastAPI()
 
@@ -72,11 +83,14 @@ async def upload_file(background_tasks: BackgroundTasks, file: UploadFile = File
     
     # Save temp file
     temp_path = f"temp_{job_id}.txt"
-    with open(temp_path, "wb") as f:
-        f.write(content)
-    
-    domains = load_domains(temp_path)
-    os.remove(temp_path)
+    try:
+        with open(temp_path, "wb") as f:
+            f.write(content)
+        
+        domains = load_domains(temp_path)
+    finally:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
     
     if not domains:
         return {"error": "No valid domains found in file"}

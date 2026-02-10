@@ -77,7 +77,7 @@ class GoogleSheetHandler:
 def load_domains(filename: str) -> List[str]:
     if not os.path.exists(filename):
         return []
-    with open(filename, "r") as f:
+    with open(filename, "r", encoding="utf-8", errors="ignore") as f:
         return [line.strip() for line in f if line.strip()]
 
 _scanned_cache = set()

@@ -32,6 +32,7 @@ class Pipeline:
         self.status_lock = asyncio.Lock()
         self.processed_count = 0
         self.total_count = 0
+        self.total_searched = 0
         self.progress_callback = None
 
     def set_progress_callback(self, callback):
